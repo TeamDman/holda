@@ -1,0 +1,29 @@
+[package]
+name = "holda"
+version = "0.1.0"
+edition = "2024"
+description = "Macros for holda crate"
+authors = ["TeamDman"]
+license = "MPL-2.0"
+repository = "https://github.com/TeamDman/holda.git"
+readme = "../README.md"
+keywords = ["holda", "serde", "derive", "holder", "string-holder"]
+categories = ["development-tools"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0.40"
+syn = "2.0.100"
+serde = { version = "1.0.219", optional = true, features = ["derive"] }
+
+[dev-dependencies]
+eyre = "0.6.12"
+serde_json = "1.0"  # Add serde_json as a dev-dependency
+
+
+[features]
+default = []  # No features enabled by default.
+serde = ["dep:serde","serde/rc"] # Enable the serde dependency if the serde feature is enabled
+

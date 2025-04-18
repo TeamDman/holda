@@ -4,7 +4,7 @@ use syn::DataStruct;
 use syn::Fields;
 use syn::parse_macro_input;
 
-#[proc_macro_derive(StringHolder)]
+#[proc_macro_derive(StringHolda)]
 pub fn string_holder_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as syn::DeriveInput);
 
@@ -52,6 +52,13 @@ pub fn string_holder_derive(input: TokenStream) -> TokenStream {
             }
         }
 
+        //Implement From<&str>
+        impl From<&str> for #struct_name {
+            fn from(value: &str) -> Self {
+                Self { #inner_ident: value.into() }
+            }
+        }
+
         // Implement Into trait
         impl Into<#inner_type> for #struct_name {
             fn into(self) -> #inner_type {
@@ -88,14 +95,12 @@ pub fn string_holder_derive(input: TokenStream) -> TokenStream {
             }
         }
 
-        // FromStr implementation
         impl std::str::FromStr for #struct_name {
             type Err = eyre::Error;
 
             fn from_str(s: &str) -> Result<Self, Self::Err> {
-                // s.parse().map(|v| Self { #inner_ident: v })
-                let rc_str = std::rc::Rc::from(s); // Create an Rc<str> from the input &str
-                Ok(Self { #inner_ident: rc_str })
+                let value = s.to_string().into();
+                Ok(Self { #inner_ident: value })
             }
         }
 
@@ -134,7 +139,7 @@ pub fn string_holder_derive(input: TokenStream) -> TokenStream {
             }
         }
 
-        // Serialize and Deserialize implementations
+        #[cfg(feature = "serde")]
         impl serde::Serialize for #struct_name {
             fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
             where
@@ -144,6 +149,7 @@ pub fn string_holder_derive(input: TokenStream) -> TokenStream {
             }
         }
 
+        #[cfg(feature = "serde")]
         impl<'de> serde::Deserialize<'de> for #struct_name {
             fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
             where
