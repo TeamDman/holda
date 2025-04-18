@@ -1,7 +1,5 @@
-#[cfg(feature = "serde")]
 mod tests {
     use holda::Holda;
-    use serde_json;
     use uuid::Uuid;
 
     #[derive(Holda)]
@@ -14,17 +12,23 @@ mod tests {
         let uuid = Uuid::new_v4();
         let wrapper = MyUuidWrapper::new(uuid);
 
-        assert_eq!(wrapper.inner, uuid);
+        assert_eq!(*wrapper, uuid);
     }
 
-    #[test]
-    fn test_uuid_serde() {
-        let uuid = Uuid::new_v4();
-        let wrapper = MyUuidWrapper::new(uuid);
+    #[cfg(feature = "serde")]
+    mod serde_tests {
+        use super::*;
+        use serde_json;
 
-        let serialized = serde_json::to_string(&wrapper).unwrap();
-        let deserialized: MyUuidWrapper = serde_json::from_str(&serialized).unwrap();
+        #[test]
+        fn test_uuid_serde() {
+            let uuid = Uuid::new_v4();
+            let wrapper = MyUuidWrapper::new(uuid);
 
-        assert_eq!(wrapper.inner, deserialized.inner);
+            let serialized = serde_json::to_string(&wrapper).unwrap();
+            let deserialized: MyUuidWrapper = serde_json::from_str(&serialized).unwrap();
+
+            assert_eq!(wrapper, deserialized);
+        }
     }
 }

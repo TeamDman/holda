@@ -16,12 +16,12 @@ mod tests {
     #[test]
     fn test_i32_wrapper() {
         let wrapper = MyI32Wrapper::new(42);
-        assert_eq!(wrapper.inner, 42);
+        assert_eq!(*wrapper, 42);
     }
 
     #[test]
     fn test_f64_wrapper() {
         let wrapper = MyF64Wrapper::new(3.14);
-        assert_eq!(wrapper.inner, 3.14);
+        assert_eq!(*wrapper, 3.14);
     }
 }

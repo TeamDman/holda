@@ -1,9 +1,9 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{
-    DataStruct, DeriveInput, Fields, parse_macro_input, Attribute,
-};
-use syn::meta::ParseNestedMeta;
+use syn::DataStruct;
+use syn::DeriveInput;
+use syn::Fields;
+use syn::parse_macro_input;
 
 #[proc_macro_derive(StringHolda)]
 pub fn string_holda_derive(input: TokenStream) -> TokenStream {
@@ -46,7 +46,8 @@ fn string_holder_derive_impl(input: TokenStream, is_string: bool) -> TokenStream
                     skip_serde = true;
                 }
                 Ok(())
-            }).unwrap();
+            })
+            .unwrap();
         }
     }
 
@@ -232,7 +233,6 @@ fn string_holder_derive_impl(input: TokenStream, is_string: bool) -> TokenStream
     } else {
         quote! {}
     };
-
 
     // Generate all the trait implementations
     let expanded = quote! {

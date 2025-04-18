@@ -10,6 +10,6 @@ mod tests {
     #[test]
     fn test_unit_wrapper() {
         let wrapper = MyUnitWrapper::new(());
-        assert_eq!(wrapper.inner, ());
+        assert_eq!(*wrapper, ());
     }
 }

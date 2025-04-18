@@ -1,7 +1,8 @@
 #[cfg(feature = "serde")]
 mod tests {
     use holda::Holda;
-    use serde::{Deserialize, Serialize};
+    use serde::Deserialize;
+    use serde::Serialize;
     use std::fmt;
 
     #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Hash, Eq, PartialOrd, Ord)]
@@ -28,8 +29,8 @@ mod tests {
             field2: "test".to_string(),
         };
         let wrapper = MyCustomStructWrapper::new(custom_struct);
-        assert_eq!(wrapper.inner.field1, 10);
-        assert_eq!(wrapper.inner.field2, "test");
+        assert_eq!(wrapper.field1, 10);
+        assert_eq!(wrapper.field2, "test");
     }
 
     #[test]
@@ -38,10 +39,11 @@ mod tests {
             field1: 20,
             field2: "serde_test".to_string(),
         };
-        let wrapper = MyCustomStructWrapper::new(custom_struct);
+        let wrapper = MyCustomStructWrapper::new(custom_struct.clone());
+        assert_eq!(*wrapper, custom_struct);
+
         let serialized = serde_json::to_string(&wrapper).unwrap();
         let deserialized: MyCustomStructWrapper = serde_json::from_str(&serialized).unwrap();
-
         assert_eq!(wrapper, deserialized);
     }
 }
