@@ -1,0 +1,35 @@
+[package]
+name = "holda"
+version = "0.1.0"
+edition = "2024"
+description = "Convenience macros for creating domain objects with serde support."
+authors = ["TeamDman"]
+license = "MPL-2.0"
+repository = "https://github.com/TeamDman/holda.git"
+readme = "README.md"
+keywords = ["holda", "serde", "derive", "holder", "string-holder"]
+categories = ["development-tools"]
+
+[lib]
+proc-macro = true
+
+[workspace]
+members = [
+    "examples/*",
+]
+
+[dependencies]
+quote = "1.0.40"
+syn = "2.0.100"
+serde = { version = "1.0.219", optional = true, features = ["derive"] }
+
+[dev-dependencies]
+eyre = "0.6.12"
+serde_json = "1.0"  # Add serde_json as a dev-dependency
+uuid = { version = "0.8", features = ["serde", "v4"] }
+serde = { version = "1.0", features = ["derive"] }
+
+[features]
+default = []  # No features enabled by default.
+serde = ["dep:serde","serde/rc"] # Enable the serde dependency if the serde feature is enabled
+
