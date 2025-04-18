@@ -51,6 +51,12 @@ fn string_holder_derive_impl(input: TokenStream, is_string: bool) -> TokenStream
         }
     }
 
+    
+    #[cfg(not(feature = "serde"))]
+    {
+        skip_serde = true;
+    }
+
     // Get the field name (assuming it's a single field named "inner")
     let fields = if let syn::Data::Struct(DataStruct {
         fields: Fields::Named(named),
@@ -205,7 +211,6 @@ fn string_holder_derive_impl(input: TokenStream, is_string: bool) -> TokenStream
 
     let serde_impl = if !skip_serde {
         quote! {
-            #[cfg(feature = "serde")]
             impl serde::Serialize for #struct_name
             where #inner_type: serde::Serialize
             {
@@ -217,7 +222,6 @@ fn string_holder_derive_impl(input: TokenStream, is_string: bool) -> TokenStream
                 }
             }
 
-            #[cfg(feature = "serde")]
             impl<'de> serde::Deserialize<'de> for #struct_name
             where #inner_type: serde::Deserialize<'de>
             {
